@@ -1,4 +1,77 @@
-**/node_modules
-**/dist
-**/.git
-**/data/orders.json
+# Node.js
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/package-lock.json
+frontend/yarn.lock
+
+# Go
+backend/vendor/
+backend/*.exe
+backend/*.test
+backend/server
+backend/main
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Данные
+data/
+*.json
+!backend/go.mod
+!backend/go.sum
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+.dockerignore.example
+
+# Документация
+README.md
+LICENSE
+*.md
+!**/README.md
+
+# Логи
+logs/
+*.log
+
+# Временные файлы
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Тесты
+coverage/
+.nyc_output/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+__tests__/
+__mocks__/
+
+# Системные
+Thumbs.db
+Desktop.ini
