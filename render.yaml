@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: dostavka
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DATA_FILE
+        value: /app/data/orders.json
