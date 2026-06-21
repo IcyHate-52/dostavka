@@ -1,29 +1,38 @@
-# --- Stage 1: build the React frontend -------------------------------------
-FROM node:20-alpine AS frontend-build
+# --- Stage 1: build the frontend ---------------------------------------------
+FROM node:18-alpine AS frontend-build
 WORKDIR /app/frontend
-COPY frontend/package.json ./
+
+# Копируем package.json и устанавливаем зависимости
+COPY frontend/package*.json ./
 RUN npm install
+
+# УСТАНАВЛИВАЕМ ТИПЫ ДЛЯ NODE.JS
+RUN npm install --save-dev @types/node
+
+# Копируем исходники и собираем
 COPY frontend/ ./
-# Same-origin deploy: API and frontend are served by the same Go server,
-# so requests stay relative ("/api/orders") instead of hardcoding a host.
-ENV VITE_API_URL=""
 RUN npm run build
 
-# --- Stage 2: build the Go backend ------------------------------------------
+# --- Stage 2: build the Go backend -------------------------------------------
 FROM golang:1.22-alpine AS backend-build
 WORKDIR /app/backend
+
 COPY backend/go.mod ./
+RUN go mod download
+
 COPY backend/ ./
 RUN go build -o /app/server ./cmd/server
 
-# --- Stage 3: final runtime image -------------------------------------------
-FROM alpine:3.20
+# --- Stage 3: final runtime --------------------------------------------------
+FROM alpine:latest
 WORKDIR /app
-COPY --from=backend-build /app/server ./server
-COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 
-ENV FRONTEND_DIST=/app/frontend/dist
-ENV DATA_FILE=/app/data/orders.json
+RUN apk add --no-cache ca-certificates
+
+COPY --from=frontend-build /app/frontend/dist ./frontend/dist
+COPY --from=backend-build /app/server ./server
+
+RUN chmod +x ./server
 
 EXPOSE 8080
 CMD ["./server"]
