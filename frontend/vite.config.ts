@@ -1,17 +1,12 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { fileURLToPath } from 'url'
-import { dirname, resolve } from 'path'
+const { defineConfig } = require('vite')
+const react = require('@vitejs/plugin-react')
+const path = require('path')
 
-// Для ES модулей
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-export default defineConfig({
+module.exports = defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   server: {
@@ -19,12 +14,13 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:8080',
+        target: 'http://localhost:8080',
         changeOrigin: true,
       },
     },
   },
   build: {
     outDir: 'dist',
+    emptyOutDir: true,
   },
 })
