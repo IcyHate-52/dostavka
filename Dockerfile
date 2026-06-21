@@ -5,6 +5,9 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
 
+# ✅ ВАЖНО: устанавливаем типы для Node.js
+RUN npm install --save-dev @types/node
+
 COPY frontend/ ./
 
 # Собираем фронтенд
